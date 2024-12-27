@@ -15,17 +15,22 @@
     <button id="play">Play</button>
     <button onclick="nextVideo()">Next</button>
     <button onclick="previousVideo()">Previous</button>
+    <button id="import">Import</button>
 
     <script>
+        //Creating an array of videos in order to access them when needed
         const videos = ['media/047161060-sketches-space-planetary-nebul.mp4', 
                     'media/056066840-gas-cloud-fly-through.mp4', 
                     'media/057718207-carina-nebula-3-dimensions-hd.mp4', 
                     'media/092736884-planets-space-jupiter-animatio.mp4'];
         
+        //Getting the video element and the buttons
         const video = document.getElementById('video');
+        const importBttn = document.getElementById('import');
         const play = document.getElementById('play');
         let videoIndex = 0;
 
+        //Creating actions for play/pause buttons
         play.addEventListener('click', () => {
             if (video.paused) {
                 video.play();
@@ -36,7 +41,7 @@
             }
         });
 
-        
+        //Leads the current video on the screen
         function loadVideo(i) {
             if (i >= 0 && i < videos.length) {
                 video.src = videos[i];
@@ -46,21 +51,48 @@
             }
         }
 
+        //Switches to the next video when the button is pressed
         function nextVideo() {
             if (videoIndex < videos.length - 1) {
                 loadVideo(videoIndex + 1);
             }
         }
 
+        //Switches to the previous video when the button is pressed
         function previousVideo() {
             if (videoIndex > 0) {
                 loadVideo(videoIndex - 1);
             }
         }
 
+        //When a video ends, it automatically switches to the next one
         video.addEventListener('ended', () => {
-            nextVideo();
+            if (videoIndex == videos.length - 1) {
+                loadVideo(0);
+            } else {
+                nextVideo();
+            }
         });
+
+        //Importing a video from the user's device - only mp4 accepted
+        importBttn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/mp4';
+            input.click();
+
+            input.addEventListener('change', () => {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                reader.onload = () => {
+                    videos.push(reader.result);
+                    loadVideo(videos.length - 1);
+                }
+            });
+        })
+
     </script>
 
 </body>
