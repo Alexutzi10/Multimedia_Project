@@ -8,7 +8,7 @@
 <body>
 
     <video id="video" width="640" height="360" controls>
-        <source src="/media/047161060-sketches-space-planetary-nebul.mp4" type="video/mp4">
+        <source src="media/Carina-nebula-3-dimensions-hd.mp4" type="video/mp4">
         The video is not supported by your browser.
     </video>
 
@@ -17,19 +17,22 @@
     <button onclick="previousVideo()">Previous</button>
     <button id="import">Import</button>
     <button id="delete">Delete</button>
+    <ul id="ul-videos"></ul>
 
     <script>
         //Creating an array of videos in order to access them when needed
-        const videos = ['media/047161060-sketches-space-planetary-nebul.mp4', 
-                    'media/056066840-gas-cloud-fly-through.mp4', 
-                    'media/057718207-carina-nebula-3-dimensions-hd.mp4', 
-                    'media/092736884-planets-space-jupiter-animatio.mp4'];
+        const videos = ['media/Carina-nebula-3-dimensions-hd.mp4', 
+            'media/Gas-cloud-fly-through.mp4',
+            'media/Planets-space-jupiter-animatio.mp4', 
+            'media/Sketches-space-planetary-nebul.mp4'
+        ];
         
         //Getting the video element and the buttons
         const video = document.getElementById('video');
         const importBttn = document.getElementById('import');
         const deleteBttn = document.getElementById('delete');
         const play = document.getElementById('play');
+        const ulVideos = document.getElementById('ul-videos');
         let videoIndex = 0;
 
         //Creating actions for play/pause buttons
@@ -42,6 +45,16 @@
                 play.textContent = 'Play';
             }
         });
+
+        //Creating a list of videos
+        function createList() {
+            ulVideos.replaceChildren();
+            for (let i = 0; i < videos.length; i++) {
+                const li = document.createElement('li');
+                li.textContent = videos[i].split('/').pop().split('.')[0];
+                ulVideos.appendChild(li);
+            }
+        }
 
         //Leads the current video on the screen
         function loadVideo(i) {
@@ -93,14 +106,15 @@
                     loadVideo(videos.length - 1);
                 }
             });
-        })
+        });
 
         //Deleting the current video
         deleteBttn.addEventListener ('click', () => {
             videos.splice(videoIndex, 1);
             loadVideo(videoIndex);
-        })
+        });
 
+        createList();
     </script>
 
 </body>
