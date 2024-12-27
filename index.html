@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video player</title>
+</head>
+<body>
+
+    <video id="video" width="640" height="360" controls>
+        <source src="/media/047161060-sketches-space-planetary-nebul.mp4" type="video/mp4">
+        The video is not supported by your browser.
+    </video>
+
+    <button id="play">Play</button>
+    <button onclick="nextVideo()">Next</button>
+    <button onclick="previousVideo()">Previous</button>
+
+    <script>
+        const videos = ['media/047161060-sketches-space-planetary-nebul.mp4', 
+                    'media/056066840-gas-cloud-fly-through.mp4', 
+                    'media/057718207-carina-nebula-3-dimensions-hd.mp4', 
+                    'media/092736884-planets-space-jupiter-animatio.mp4'];
+        
+        const video = document.getElementById('video');
+        const play = document.getElementById('play');
+        let videoIndex = 0;
+
+        play.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                play.textContent = 'Pause';
+            } else {
+                video.pause();
+                play.textContent = 'Play';
+            }
+        });
+
+        
+        function loadVideo(i) {
+            if (i >= 0 && i < videos.length) {
+                video.src = videos[i];
+                video.load();
+                video.play();
+                videoIndex = i;
+            }
+        }
+
+        function nextVideo() {
+            if (videoIndex < videos.length - 1) {
+                loadVideo(videoIndex + 1);
+            }
+        }
+
+        function previousVideo() {
+            if (videoIndex > 0) {
+                loadVideo(videoIndex - 1);
+            }
+        }
+
+        video.addEventListener('ended', () => {
+            nextVideo();
+        });
+    </script>
+
+</body>
+</html>
