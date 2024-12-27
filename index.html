@@ -16,6 +16,7 @@
     <button onclick="nextVideo()">Next</button>
     <button onclick="previousVideo()">Previous</button>
     <button id="import">Import</button>
+    <button id="delete">Delete</button>
 
     <script>
         //Creating an array of videos in order to access them when needed
@@ -27,6 +28,7 @@
         //Getting the video element and the buttons
         const video = document.getElementById('video');
         const importBttn = document.getElementById('import');
+        const deleteBttn = document.getElementById('delete');
         const play = document.getElementById('play');
         let videoIndex = 0;
 
@@ -91,6 +93,12 @@
                     loadVideo(videos.length - 1);
                 }
             });
+        })
+
+        //Deleting the current video
+        deleteBttn.addEventListener ('click', () => {
+            videos.splice(videoIndex, 1);
+            loadVideo(videoIndex);
         })
 
     </script>
