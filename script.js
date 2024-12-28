@@ -1,3 +1,5 @@
+import { VideoEffects } from './effects.js';
+
 //Creating an array of videos in order to access them when needed
 const videos = ['media/Carina-nebula-3-dimensions-hd.mp4', 
     'media/Gas-cloud-fly-through.mp4',
@@ -5,18 +7,22 @@ const videos = ['media/Carina-nebula-3-dimensions-hd.mp4',
     'media/Sketches-space-planetary-nebul.mp4'
 ];
 
-
 //Getting the video element and the buttons
 const video = document.getElementById('video');
+const canvas = document.getElementById('effectCanvas');
 const importBttn = document.getElementById('import');
 const deleteBttn = document.getElementById('delete');
 const play = document.getElementById('play');
+const next = document.getElementById('next');
+const previous = document.getElementById('previous');
 const ulVideos = document.getElementById('ul-videos');
+const effectButtons = document.querySelectorAll('.effect-grid button');
 const sortBttn = document.getElementById('sort');
 let videoIndex = 0;
 
+const videoEffects = new VideoEffects(video, canvas);
 
-//Creating actions for play/pause buttons
+//Play - Pause button
 play.addEventListener('click', () => {
     if (video.paused) {
         video.play();
@@ -27,8 +33,7 @@ play.addEventListener('click', () => {
     }
 });
 
-
-//Creating a list of videos
+//Creates a list of videos
 function createList() {
     ulVideos.replaceChildren();
     for (let i = 0; i < videos.length; i++) {
@@ -37,7 +42,6 @@ function createList() {
         ulVideos.appendChild(li);
     }
 }
-
 
 //Leads the current video on the screen
 function loadVideo(i) {
@@ -49,18 +53,16 @@ function loadVideo(i) {
     }
 }
 
-
-//Switches to the next video when the button is pressed
+//Switches to the next video
 function nextVideo() {
     if (videoIndex < videos.length - 1) {
         loadVideo(videoIndex + 1);
-    } else if (videoIndex == videos.length - 1) {
+    } else {
         loadVideo(0);
     }
 }
 
-
-//Switches to the previous video when the button is pressed
+//Switches to the previous video
 function previousVideo() {
     if (videoIndex > 0) {
         loadVideo(videoIndex - 1);
@@ -69,8 +71,7 @@ function previousVideo() {
     }
 }
 
-
-//When a video ends, it automatically switches to the next one
+//automatically switching to the next video
 video.addEventListener('ended', () => {
     if (videoIndex == videos.length - 1) {
         loadVideo(0);
@@ -79,8 +80,7 @@ video.addEventListener('ended', () => {
     }
 });
 
-
-//Importing a video from the user's device - only mp4 accepted
+//Importing a video - mp4 only
 importBttn.addEventListener('click', () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -96,22 +96,19 @@ importBttn.addEventListener('click', () => {
             videos.push(reader.result);
             loadVideo(videos.length - 1);
             createList();
-            saveVideosToStorage();
         }
     });
 });
 
-
 //Deleting the current video
-deleteBttn.addEventListener ('click', () => {
+deleteBttn.addEventListener('click', () => {
     videos.splice(videoIndex, 1);
-    if (videos.length > 0) {
-        loadVideo(videoIndex % videos.length);
+    if (videoIndex >= videos.length) {
+        videoIndex = 0;
     }
+    loadVideo(videoIndex);
     createList();
-    saveVideosToStorage();
 });
-
 
 //Sorting videos by duration
 sortBttn.addEventListener('click', () => {
@@ -148,18 +145,18 @@ function saveVideos() {
     localStorage.setItem('videos', JSON.stringify(videos));
 }
 
-function loadVideos() {
-    const storedVideos = localStorage.getItem('videos');
-    if (storedVideos) {
-        return JSON.parse(savedVideos);
-    }
-    return null;
-}
+next.addEventListener('click', nextVideo);
+previous.addEventListener('click', previousVideo);
 
-const storedVideos = loadVideos();
-if (storedVideos) {
-    videos.length = 0;
-    videos.push(...storedVideos);
-}
+//Applying video effects
+effectButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const effect = button.getAttribute('data-effect');
+        videoEffects.applyEffect(effect);
+    });
+});
 
+// Initial load
+loadVideo(videoIndex);
 createList();
+videoEffects.drawFrame();
