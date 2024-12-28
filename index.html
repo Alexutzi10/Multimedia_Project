@@ -7,22 +7,34 @@
 </head>
 <body>
 
-    <video id="video" width="640" height="360" controls>
+    <video id="video" width="640" height="380" controls>
         <source src="media/Carina-nebula-3-dimensions-hd.mp4" type="video/mp4">
         The video is not supported by your browser.
     </video>
 
+    <canvas id="effectCanvas" width="640" height="380"></canvas>
+
     <button id="play">Play</button>
-    <button onclick="nextVideo()">Next</button>
-    <button onclick="previousVideo()">Previous</button>
+    <button id="next">Next</button>
+    <button id="previous">Previous</button>
     <button id="import">Import</button>
     <button id="delete">Delete</button>
     <button id="sort">Sort</button>
     <h3>Playing videos:</h3>
     <ul id="ul-videos"></ul>
 
-    <script src="script.js">
-    </script>
+    <div id="effects-modal" class="modal">
+        <p>Image Effects</p>
+        <div class="effect-grid">
+            <button data-effect="normal">Normal</button>
+            <button data-effect="green_tint">Green tint</button>
+            <button data-effect="magenta_tint">Magenta tint</button>
+            <button data-effect="old_paper">Old paper</button>
+            <button data-effect="colder_tint">Colder tint</button>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
 
 </body>
 </html>
