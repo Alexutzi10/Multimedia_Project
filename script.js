@@ -18,9 +18,34 @@ const previous = document.getElementById('previous');
 const ulVideos = document.getElementById('ul-videos');
 const effectButtons = document.querySelectorAll('.effect-grid button');
 const sortBttn = document.getElementById('sort');
+const progressBar = document.getElementById('progressBar');
+const previewCanvas = document.getElementById('previewCanvas');
+const previewContext = previewCanvas.getContext('2d');
 let videoIndex = 0;
 
 const videoEffects = new VideoEffects(video, canvas);
+
+// Load settings from local storage
+function loadSettings() {
+    const settings = JSON.parse(localStorage.getItem('videoSettings'));
+    if (settings) {
+        video.volume = settings.volume;
+        video.currentTime = settings.currentTime;
+        videoIndex = settings.currentIndex;
+        videoEffects.applyEffect(settings.effect);
+    }
+}
+
+// Save settings to local storage
+function saveSettings() {
+    const settings = {
+        volume: video.volume,
+        currentTime: video.currentTime,
+        currentIndex: videoIndex,
+        effect: videoEffects.currentEffect
+    };
+    localStorage.setItem('videoSettings', JSON.stringify(settings));
+}
 
 //Play - Pause button
 play.addEventListener('click', () => {
@@ -139,11 +164,12 @@ sortBttn.addEventListener('click', () => {
 });
 createList();
 
+// Save settings when the video is paused or the page is unloaded
+video.addEventListener('pause', saveSettings);
+window.addEventListener('beforeunload', saveSettings);
 
-//Saving the preferrences in local storage
-function saveVideos() {
-    localStorage.setItem('videos', JSON.stringify(videos));
-}
+// Load settings when the page is loaded
+window.addEventListener('load', loadSettings);
 
 next.addEventListener('click', nextVideo);
 previous.addEventListener('click', previousVideo);
@@ -153,8 +179,58 @@ effectButtons.forEach(button => {
     button.addEventListener('click', () => {
         const effect = button.getAttribute('data-effect');
         videoEffects.applyEffect(effect);
+        saveSettings(); // Save settings whenever an effect is applied
     });
 });
+
+// Sincronizarea progressBar cu timpul videoclipului
+video.addEventListener('timeupdate', () => {
+    progressBar.value = (video.currentTime / video.duration) * 100;
+});
+
+// Când utilizatorul modifică progressBar
+progressBar.addEventListener('input', () => {
+    const targetTime = (progressBar.value / 100) * video.duration;
+    video.currentTime = targetTime;
+});
+
+// Previzualizare cadru pe mouseover
+progressBar.addEventListener('mousemove', (e) => {
+    const rect = progressBar.getBoundingClientRect();
+    const progress = (e.clientX - rect.left) / rect.width;
+    const previewTime = progress * video.duration;
+
+    // Mutăm canvas-ul de previzualizare
+    previewCanvas.style.left = `${e.clientX - rect.left - previewCanvas.width / 2}px`;
+    previewCanvas.style.top = `${rect.top - previewCanvas.height - 10}px`;
+    previewCanvas.style.display = 'block';
+
+    // Extragem cadrul de previzualizare
+    extractFrame(previewTime);
+});
+
+// Ascunde canvas-ul de previzualizare când mouse-ul iese
+progressBar.addEventListener('mouseout', () => {
+    previewCanvas.style.display = 'none';
+});
+
+// Funcție pentru extragerea unui cadru la un anumit timp
+function extractFrame(time) {
+    // Setăm videoclipul pe timpul specificat fără a porni redarea
+    video.pause();
+    const tempCurrentTime = video.currentTime; // Salvează timpul curent
+    video.currentTime = time;
+
+    video.addEventListener(
+        'seeked',
+        function onSeeked() {
+            previewContext.drawImage(video, 0, 0, previewCanvas.width, previewCanvas.height);
+            video.currentTime = tempCurrentTime; // Revenim la timpul original
+            video.removeEventListener('seeked', onSeeked);
+        },
+        { once: true }
+    );
+}
 
 // Initial load
 loadVideo(videoIndex);
