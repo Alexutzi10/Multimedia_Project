@@ -3,10 +3,12 @@ export class VideoEffects {
     constructor(videoElement, canvasElement) {
         this.video = videoElement;
         this.canvas = canvasElement;
-        this.context = this.canvas.getContext('2d');
+        this.context = this.canvas.getContext('2d', { willReadFrequently: true });
         this.currentEffect = 'normal';
     }
 
+
+    //Applying the effect
     applyEffect(effect) {
         this.currentEffect = effect;
         this.drawFrame();
