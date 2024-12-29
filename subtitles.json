@@ -1,0 +1,44 @@
+[
+    {
+        "title": "Journey Through the Stars",
+        "length": "10s",
+        "script": [
+            "[Scene: A vast starry sky with shimmering constellations]",
+            "[Narration]: \"In the boundless cosmos, stars light up the night, each a distant sun, a tale waiting to be told.\"",
+            "[Background music: Gentle, ethereal tones fade in and out]"
+        ]
+    },
+    {
+        "title": "The Birth of a Galaxy",
+        "length": "10s",
+        "script": [
+            "[Scene: Nebulae swirling, colors blending in vibrant shades]",
+            "[Narration]: \"Galaxies emerge from cosmic dust, spiraling into magnificent forms.\"",
+            "[Background music: Orchestral crescendo builds excitement]"
+        ]
+    },
+    {
+        "title": "Life on Distant Worlds",
+        "length": "29s",
+        "script": [
+            "[Scene: A planet with glowing blue oceans and lush green forests]",
+            "[Narration]: \"Could life thrive beyond Earth? Scientists search for answers among the stars.\"",
+            "[Scene transitions: Zoom into an alien landscape with exotic creatures]",
+            "[Narration]: \"Imagine the wonders awaiting discovery. What stories do these worlds hold?\"",
+            "[Background music: Inspiring, with a sense of curiosity and awe]"
+        ]
+    },
+    {
+        "title": "The Mysteries of Black Holes",
+        "length": "30s",
+        "script": [
+            "[Scene: A black hole with light swirling around its event horizon]",
+            "[Narration]: \"Black holes: cosmic enigmas where gravity reigns supreme.\"",
+            "[Scene transitions: Light bends and stretches, simulating time distortion]",
+            "[Narration]: \"Scientists unravel their secrets, revealing a universe beyond imagination.\"",
+            "[Scene: A spacecraft approaches the edge of a black hole]",
+            "[Narration]: \"Daring explorers might one day reach these mysterious realms.\"",
+            "[Background music: Deep, resonant tones build suspense]"
+        ]
+    }
+]

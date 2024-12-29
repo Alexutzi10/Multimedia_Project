@@ -22,8 +22,10 @@ const progressBar = document.getElementById('progressBar');
 const previewCanvas = document.getElementById('previewCanvas');
 const previewContext = previewCanvas.getContext('2d');
 let videoIndex = 0;
+let jsonData = [];
 
 const videoEffects = new VideoEffects(video, canvas);
+
 
 // Load settings from local storage
 function loadSettings() {
@@ -36,6 +38,7 @@ function loadSettings() {
     }
 }
 
+
 // Save settings to local storage
 function saveSettings() {
     const settings = {
@@ -46,6 +49,7 @@ function saveSettings() {
     };
     localStorage.setItem('videoSettings', JSON.stringify(settings));
 }
+
 
 //Play - Pause button
 play.addEventListener('click', () => {
@@ -58,6 +62,7 @@ play.addEventListener('click', () => {
     }
 });
 
+
 //Creates a list of videos
 function createList() {
     ulVideos.replaceChildren();
@@ -67,6 +72,7 @@ function createList() {
         ulVideos.appendChild(li);
     }
 }
+
 
 //Leads the current video on the screen
 function loadVideo(i) {
@@ -78,6 +84,7 @@ function loadVideo(i) {
     }
 }
 
+
 //Switches to the next video
 function nextVideo() {
     if (videoIndex < videos.length - 1) {
@@ -86,6 +93,7 @@ function nextVideo() {
         loadVideo(0);
     }
 }
+
 
 //Switches to the previous video
 function previousVideo() {
@@ -96,6 +104,7 @@ function previousVideo() {
     }
 }
 
+
 //automatically switching to the next video
 video.addEventListener('ended', () => {
     if (videoIndex == videos.length - 1) {
@@ -104,6 +113,7 @@ video.addEventListener('ended', () => {
         nextVideo();
     }
 });
+
 
 //Importing a video - mp4 only
 importBttn.addEventListener('click', () => {
@@ -125,6 +135,7 @@ importBttn.addEventListener('click', () => {
     });
 });
 
+
 //Deleting the current video
 deleteBttn.addEventListener('click', () => {
     videos.splice(videoIndex, 1);
@@ -135,12 +146,12 @@ deleteBttn.addEventListener('click', () => {
     createList();
 });
 
+
 //Sorting videos by duration
 sortBttn.addEventListener('click', () => {
     const videoDurations = [];
     const cnt = 0;
 
-    //Processes each video to get its duration
     const processVideo = (index) => {
         if (index >= videos.length) {
             videoDurations.sort((x1, x2) => x1.duration - x2.duration);
@@ -164,75 +175,180 @@ sortBttn.addEventListener('click', () => {
 });
 createList();
 
-// Save settings when the video is paused or the page is unloaded
+
+//Saving the settings when the video is paused or the page is unloaded
 video.addEventListener('pause', saveSettings);
 window.addEventListener('beforeunload', saveSettings);
 
-// Load settings when the page is loaded
+
+//Loading the settings when the page is loaded
 window.addEventListener('load', loadSettings);
+
 
 next.addEventListener('click', nextVideo);
 previous.addEventListener('click', previousVideo);
+
+
+//Shows the subtitles from the JSON file
+fetch('subtitles.json')
+    .then(response => response.json())
+    .then(data => {
+        jsonData = data;
+    })
+    .catch(error => console.error('Eroare la încărcarea fișierului JSON:', error));
+
+function displaySubtitles() {
+    if (!jsonData.length) return; // Asigură-te că JSON-ul este încărcat
+
+    const currentTime = video.currentTime; // Timpul curent al videoclipului
+    const currentScript = jsonData[videoIndex].script;
+
+    let subtitle = '';
+    if (currentTime < 10) {
+        subtitle = currentScript[0];
+    } else if (currentTime < 20 && currentScript[1]) {
+        subtitle = currentScript[1];
+    } else if (currentTime < 30 && currentScript[2]) {
+        subtitle = currentScript[2];
+    }
+
+    const subtitleText = subtitle.split(':').slice(1).join(':').trim().split(']').join('').trim();
+    const context = canvas.getContext('2d');
+
+    // Curăță canvas-ul înainte de a desena subtitrări noi
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    context.font = '16px Arial';
+    context.textAlign = 'center';
+    context.fillStyle = 'white';
+
+    const maxWidth = canvas.width - 40;
+    const lineHeight = 20;
+    const yStart = canvas.height - 80;
+
+    // Funcție pentru a încadra textul în linie
+    function wrapText(text, x, y, maxWidth, lineHeight) {
+        const words = text.split(' ');
+        let line = '';
+        let lines = [];
+
+        for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = context.measureText(testLine);
+            const testWidth = metrics.width;
+
+            if (testWidth > maxWidth && n > 0) {
+                lines.push(line);
+                line = words[n] + ' ';
+            } else {
+                line = testLine;
+            }
+        }
+        lines.push(line);
+
+        for (let i = 0; i < lines.length; i++) {
+            context.fillText(lines[i], x, y + i * lineHeight);
+        }
+    }
+
+    wrapText(subtitleText, canvas.width / 2, yStart, maxWidth, lineHeight);
+}
+
+// Desenarea cadrelor video și subtitrărilor
+let animationId;
+videoEffects.drawFrame = function () {
+    cancelAnimationFrame(animationId); // Oprește orice ciclu anterior
+    animationId = requestAnimationFrame(() => {
+        this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+
+        const frame = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        const data = frame.data;
+
+        switch (this.currentEffect) {
+            case 'green_tint':
+                this.green_tint(data);
+                break;
+            case 'magenta_tint':
+                this.magenta_tint(data);
+                break;
+            case 'old_paper':
+                this.old_paper(data);
+                break;
+            case 'colder_tint':
+                this.cold_tint(data);
+                break;
+            case 'normal':
+            default:
+                break;
+        }
+
+        this.context.putImageData(frame, 0, 0);
+        this.drawFrame();
+    });
+};
+
+
 
 //Applying video effects
 effectButtons.forEach(button => {
     button.addEventListener('click', () => {
         const effect = button.getAttribute('data-effect');
         videoEffects.applyEffect(effect);
-        saveSettings(); // Save settings whenever an effect is applied
+        saveSettings();
     });
 });
 
-// Sincronizarea progressBar cu timpul videoclipului
+//Syncing the progress bar with the video
 video.addEventListener('timeupdate', () => {
     progressBar.value = (video.currentTime / video.duration) * 100;
 });
 
-// Când utilizatorul modifică progressBar
+
+//User modyfying the progress bar
 progressBar.addEventListener('input', () => {
     const targetTime = (progressBar.value / 100) * video.duration;
     video.currentTime = targetTime;
 });
 
-// Previzualizare cadru pe mouseover
+
+//Preview canvas
 progressBar.addEventListener('mousemove', (e) => {
     const rect = progressBar.getBoundingClientRect();
     const progress = (e.clientX - rect.left) / rect.width;
     const previewTime = progress * video.duration;
 
-    // Mutăm canvas-ul de previzualizare
     previewCanvas.style.left = `${e.clientX - rect.left - previewCanvas.width / 2}px`;
     previewCanvas.style.top = `${rect.top - previewCanvas.height - 10}px`;
     previewCanvas.style.display = 'block';
 
-    // Extragem cadrul de previzualizare
     extractFrame(previewTime);
 });
 
-// Ascunde canvas-ul de previzualizare când mouse-ul iese
+
+//Hide preview
 progressBar.addEventListener('mouseout', () => {
     previewCanvas.style.display = 'none';
 });
 
-// Funcție pentru extragerea unui cadru la un anumit timp
+
+//Extract a frame from the video
 function extractFrame(time) {
-    // Setăm videoclipul pe timpul specificat fără a porni redarea
     video.pause();
-    const tempCurrentTime = video.currentTime; // Salvează timpul curent
+    const tempCurrentTime = video.currentTime;
     video.currentTime = time;
 
     video.addEventListener(
         'seeked',
         function onSeeked() {
             previewContext.drawImage(video, 0, 0, previewCanvas.width, previewCanvas.height);
-            video.currentTime = tempCurrentTime; // Revenim la timpul original
+            video.currentTime = tempCurrentTime;
             video.removeEventListener('seeked', onSeeked);
         },
         { once: true }
     );
 }
 
-// Initial load
+
 loadVideo(videoIndex);
 createList();
 videoEffects.drawFrame();
