@@ -22,10 +22,10 @@ const previewCanvas = document.getElementById('previewCanvas');
 const previewContext = previewCanvas.getContext('2d');
 const dragDropArea = document.getElementById('drag-drop-area');
 const fileInput = document.getElementById('file-input');
+const scriptContainer = document.getElementById('script-container');
 let videoIndex = 0;
 
 const videoEffects = new VideoEffects(video, canvas);
-
 
 // Load settings from local storage
 function loadSettings() {
@@ -50,6 +50,57 @@ function saveSettings() {
     localStorage.setItem('videoSettings', JSON.stringify(settings));
 }
 
+fetch('subtitles.json')
+    .then(response => response.json())
+    .then(data => {
+        displayScript(data);
+    })
+    .catch(error => {
+        console.error('Error loading subtitles.json:', error);
+    });
+
+
+    function displayScript(scriptData) {
+        let startTime = 0;
+        
+        scriptData.forEach((scene, index) => {
+            const duration = parseInt(scene.length);
+            const scriptContent = scene.script;
+    
+            scriptContent.forEach((line, i) => {
+                const scriptLine = document.createElement('div');
+                scriptLine.className = 'script-line';
+                scriptLine.innerText = line;
+                scriptLine.style.position = 'absolute';
+                scriptLine.style.left = '50%';
+                scriptLine.style.transform = 'translateX(-50%)';
+                scriptLine.style.top = `${50 + (i * 30)}px`;
+
+                if (line.startsWith('[Narration]')) {
+                    scriptLine.classList.add('narration');
+                } else if (line.startsWith('[Scene]')) {
+                    scriptLine.classList.add('scene');
+                }
+    
+                scriptContainer.appendChild(scriptLine);
+
+                video.addEventListener('timeupdate', function () {
+                    if (video.currentTime >= startTime && video.currentTime <= startTime + duration) {
+                        scriptLine.style.display = 'block';
+                    } else {
+                        scriptLine.style.display = 'none';
+                    }
+                });
+            });
+    
+            startTime += duration;
+        });
+    }
+
+video.addEventListener('timeupdate', () => {
+    const progress = (video.currentTime / video.duration) * 100;
+    progressBar.value = progress;
+});
 
 // Play - Pause button
 play.addEventListener('click', () => {

@@ -186,3 +186,34 @@ h3 + ul {
     width: 640px;
     margin-top: 50px;
 }
+
+#script-container {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    z-index: 2;
+}
+
+.script-line {
+    display: none;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    color: #f4a261;
+    transition: color 0.5s ease;
+}
+
+.script-line:hover {
+    color: #ff6347;
+}
+
+.script-line.narration {
+    color: #66ccff;
+}
+
+.script-line.scene {
+    color: #ffff99;
+}
