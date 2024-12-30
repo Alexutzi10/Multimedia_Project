@@ -12,8 +12,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
+    padding: 20px;
 }
 
 h3 {
@@ -23,15 +24,13 @@ h3 {
 }
 
 video {
-    position: absolute;
+    position: relative;
     z-index: 1;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 3px solid #f4a261;
+    border: none;
     border-radius: 10px;
     max-width: 100%;
     height: auto;
+    margin-bottom: 20px;
 }
 
 canvas {
@@ -46,54 +45,38 @@ canvas {
     height: auto;
 }
 
-.button-container {
+#drag-drop-area {
+    width: 640px;
+    height: 380px;
+    border: 2px dashed #ccc;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    align-items: center;
+    cursor: pointer;
     margin-top: 20px;
 }
 
-button {
-    background-color: #272727;
-    color: #e0e0e0;
-    border: 2px solid #f4a261;
-    border-radius: 5px;
-    padding: 10px 15px;
-    margin: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
+#drag-drop-area p {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
 }
 
-button:hover {
-    background-color: #f4a261;
-    color: #444444;
-    transform: scale(1.1);
-}
-
-#effects-modal {
-    background-color: rgba(0, 0, 0, 0);
+#drag-drop-area.drag-over {
+    border-color: #007BFF;
 }
 
 #controls {
-    position: relative;
     width: 640px;
     margin-top: 10px;
-}
-
-#previewCanvas {
-    position: absolute;
-    z-index: 3;
-    bottom: 40px; 
-    left: 50%;
-    transform: translateX(-50%);
-    border: 1px solid black;
-    display: block; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #progressBar {
     position: absolute;
-    z-index: 3;
+    z-index: 2;
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
@@ -123,4 +106,83 @@ button:hover {
     background: #f4a261;
     cursor: pointer;
     border-radius: 50%;
+}
+
+#previewCanvas {
+    position: absolute;
+    z-index: 2;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid #f4a261;
+    display: none;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #272727;
+    color: #e0e0e0;
+    border: 2px solid #f4a261;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #f4a261;
+    color: #444444;
+    transform: scale(1.1);
+}
+
+.button-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#effects-modal {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+ul li {
+    padding: 10px;
+    font-size: 1rem;
+    color: #f4a261;
+    text-align: center;
+    width: 100%;
+}
+
+h3 + ul {
+    width: 100%;
+    text-align: center;
+}
+
+#drag-drop-area {
+    margin-bottom: 20px;
+}
+
+#controls {
+    position: relative;
+    width: 640px;
+    margin-top: 50px;
 }
