@@ -38,7 +38,6 @@ function loadSettings() {
     }
 }
 
-
 // Save settings to local storage
 function saveSettings() {
     const settings = {
