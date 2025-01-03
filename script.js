@@ -14,6 +14,7 @@ const deleteBttn = document.getElementById('delete');
 const play = document.getElementById('play');
 const next = document.getElementById('next');
 const previous = document.getElementById('previous');
+const volumeControl = document.getElementById('volumeControl');
 const ulVideos = document.getElementById('ul-videos');
 const effectButtons = document.querySelectorAll('.effect-grid button');
 const sortBttn = document.getElementById('sort');
@@ -106,10 +107,10 @@ video.addEventListener('timeupdate', () => {
 play.addEventListener('click', () => {
     if (video.paused) {
         video.play();
-        play.textContent = 'Pause';
+        play.textContent = '⏸';
     } else {
         video.pause();
-        play.textContent = 'Play';
+        play.textContent = '⏯';
     }
 });
 

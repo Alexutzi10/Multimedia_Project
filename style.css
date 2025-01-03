@@ -24,13 +24,17 @@ h3 {
 }
 
 video {
-    position: relative;
-    z-index: 1;
-    border: none;
+    width: 100%;
+    height: 100%;
+    display: block;
     border-radius: 10px;
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 20px;
+}
+
+.video-container {
+    position: relative;
+    width: 640px;
+    height: 380px;
+    margin: 0 auto;
 }
 
 canvas {
@@ -216,4 +220,71 @@ h3 + ul {
 
 .script-line.scene {
     color: #ffff99;
+}
+
+.transparent-controls {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.transparent-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    font-size: 20px;
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: all;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.transparent-button:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+#previous {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+}
+
+#next {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+}
+
+#play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    width: 60px;
+    height: 60px;
+}
+
+.transparent-slider {
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    width: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
