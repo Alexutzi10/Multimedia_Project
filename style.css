@@ -18,7 +18,8 @@ body {
 }
 
 h3 {
-    margin: 20px 0;
+    margin: 2px 0;
+    margin-top: 40px;  
     font-size: 1.5rem;
     color: #f4a261;
 }
@@ -156,12 +157,23 @@ button:hover {
 
 #effects-modal {
     background-color: rgba(0, 0, 0, 0);
+    margin-top: 20px;
+}
+
+#effects-modal p {
+    color: #f4a261;
+    font-size: 1.5rem;
+    margin-bottom: 15px; 
+}
+
+.effect-grid {
+    margin-top: 10px;
 }
 
 ul {
     list-style: none;
     padding: 0;
-    margin-top: 1px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -169,7 +181,7 @@ ul {
 }
 
 ul li {
-    padding: 10px;
+    padding: 4px;
     font-size: 1rem;
     color: #f4a261;
     text-align: center;
@@ -232,7 +244,7 @@ h3 + ul {
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 .transparent-button {
@@ -249,10 +261,6 @@ h3 + ul {
     pointer-events: all;
     cursor: pointer;
     transition: background 0.3s ease;
-}
-
-.transparent-button:hover {
-    background: rgba(255, 255, 255, 0.4);
 }
 
 #previous {
@@ -279,12 +287,42 @@ h3 + ul {
     height: 60px;
 }
 
-.transparent-slider {
+#volumeControl {
     position: absolute;
-    bottom: 10%;
-    right: 10%;
-    width: 150px;
-    background: rgba(255, 255, 255, 0.1);
+    bottom: 30px;
+    right: 20px;
+    z-index: 1001;
+    width: 100px;
+    height: 20px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#volumeControl::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #f4a261;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #e0e0e0;
+}
+
+#volumeControl::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #f4a261;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #e0e0e0;
+}
+
+/* Add hover effect */
+#volumeControl:hover {
+    background: rgba(255, 255, 255, 0.3);
 }

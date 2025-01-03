@@ -9,7 +9,7 @@
 <body>
 
     <div class="video-container">
-        <video id="video" width="640" height="380" controls>
+        <video id="video" width="640" height="380">
             <source src="media/Carina-nebula-3-dimensions-hd.mp4" type="video/mp4">
             The video is not supported by your browser.
         </video>
@@ -18,7 +18,7 @@
             <button id="previous" class="transparent-button">⏮</button>
             <button id="play" class="transparent-button">⏯</button>
             <button id="next" class="transparent-button">⏭</button>
-            <input id="volumeControl" type="range" min="0" max="1" step="0.01">
+            <input id="volumeControl" type="range" min="0" max="1" step="0.01" value="0.5">
         </div>
     </div>
 
@@ -36,19 +36,8 @@
         <button id="sort">Sort</button>
     </div>
 
-    <h3>Playing videos:</h3>
-    <ul id="ul-videos"></ul>
-
-
-    <div id="drag-drop-area">
-        <p>Drag & drop video file here</p>
-        <input type="file" id="file-input" accept="video/mp4" style="display: none;">
-    </div>
-
-    
-
     <div id="effects-modal" class="modal">
-        <p>Image Effects</p>
+        <p>Effects</p>
         <div class="effect-grid">
             <button data-effect="normal">Normal</button>
             <button data-effect="green_tint">Green tint</button>
@@ -56,6 +45,15 @@
             <button data-effect="old_paper">Old paper</button>
             <button data-effect="colder_tint">Colder tint</button>
         </div>
+    </div>
+
+    <h3>Playing videos:</h3>
+    <ul id="ul-videos"></ul>
+
+
+    <div id="drag-drop-area">
+        <p>Drag & drop video file here</p>
+        <input type="file" id="file-input" accept="video/mp4" style="display: none;">
     </div>
 
     <script type="module" src="script.js"></script>

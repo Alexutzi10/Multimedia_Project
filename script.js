@@ -1,6 +1,5 @@
 import { VideoEffects } from './effects.js';
 
-// Creating an array of videos in order to access them when needed
 const videos = ['media/Carina-nebula-3-dimensions-hd.mp4', 
     'media/Gas-cloud-fly-through.mp4',
     'media/Planets-space-jupiter-animatio.mp4', 
@@ -112,6 +111,34 @@ play.addEventListener('click', () => {
         video.pause();
         play.textContent = '⏯';
     }
+});
+
+volumeControl.addEventListener('input', (e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    video.volume = volumeControl.value;
+    saveSettings();
+});
+
+//Load volume from preferences
+video.addEventListener('loadedmetadata', () => {
+    volumeControl.value = video.volume;
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    video.volume = 0.5;
+    volumeControl.value = video.volume;
+    
+    volumeControl.addEventListener('input', (e) => {
+        e.stopPropagation();
+        video.volume = volumeControl.value;
+        saveSettings();
+    });
+    
+    volumeControl.addEventListener('change', (e) => {
+        e.stopPropagation();
+        video.volume = volumeControl.value;
+        saveSettings();
+    });
 });
 
 
