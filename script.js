@@ -236,12 +236,12 @@ sortBttn.addEventListener('click', () => {
 });
 
 
-// Saving settings when video is paused or page is unloaded
+
 video.addEventListener('pause', saveSettings);
 window.addEventListener('beforeunload', saveSettings);
 
 
-// Loading settings when the page is loaded
+
 window.addEventListener('load', loadSettings);
 next.addEventListener('click', nextVideo);
 previous.addEventListener('click', previousVideo);
@@ -330,8 +330,7 @@ function extractFrame(time) {
     const tempCurrentTime = video.currentTime;
     video.currentTime = time;
 
-    video.addEventListener(
-        'seeked',
+    video.addEventListener('seeked',
         function onSeeked() {
             previewContext.drawImage(video, 0, 0, previewCanvas.width, previewCanvas.height);
             video.currentTime = tempCurrentTime;
