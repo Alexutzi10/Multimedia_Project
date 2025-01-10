@@ -6,7 +6,7 @@ const videos = ['media/Carina-nebula-3-dimensions-hd.mp4',
     'media/Sketches-space-planetary-nebul.mp4'
 ];
 
-// Getting the video element and the buttons
+
 const video = document.getElementById('video');
 const canvas = document.getElementById('effectCanvas');
 const deleteBttn = document.getElementById('delete');
@@ -22,12 +22,11 @@ const previewCanvas = document.getElementById('previewCanvas');
 const previewContext = previewCanvas.getContext('2d');
 const dragDropArea = document.getElementById('drag-drop-area');
 const fileInput = document.getElementById('file-input');
-const scriptContainer = document.getElementById('script-container');
 let videoIndex = 0;
 
 const videoEffects = new VideoEffects(video, canvas);
 
-// Load settings from local storage
+
 function loadSettings() {
     const settings = JSON.parse(localStorage.getItem('videoSettings'));
     if (settings) {
@@ -38,7 +37,7 @@ function loadSettings() {
     }
 }
 
-// Save settings to local storage
+
 function saveSettings() {
     const settings = {
         volume: video.volume,
@@ -54,7 +53,7 @@ video.addEventListener('timeupdate', () => {
     progressBar.value = progress;
 });
 
-// Play - Pause button
+
 play.addEventListener('click', () => {
     if (video.paused) {
         video.play();
@@ -71,7 +70,7 @@ volumeControl.addEventListener('input', (e) => {
     saveSettings();
 });
 
-//Load volume from preferences
+
 video.addEventListener('loadedmetadata', () => {
     volumeControl.value = video.volume;
 });
@@ -94,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Creates a list of videos
+
 function createList() {
     ulVideos.replaceChildren();
     for (let i = 0; i < videos.length; i++) {
@@ -105,7 +104,7 @@ function createList() {
 }
 
 
-// Loads the current video on the screen
+
 function loadVideo(i) {
     if (i >= 0 && i < videos.length) {
         video.src = videos[i];
@@ -116,50 +115,47 @@ function loadVideo(i) {
 }
 
 
-// Switches to the next video
+
 function nextVideo() {
-    if (videoIndex < videos.length - 1) {
+    if (videoIndex < videos.length - 1) 
         loadVideo(videoIndex + 1);
-    } else {
+    else 
         loadVideo(0);
-    }
 }
 
 
-// Switches to the previous video
+
 function previousVideo() {
-    if (videoIndex > 0) {
+    if (videoIndex > 0) 
         loadVideo(videoIndex - 1);
-    } else if (videoIndex == 0) {
+    else if (videoIndex == 0) 
         loadVideo(videos.length - 1);
-    }
 }
 
 
-// Automatically switching to the next video
+
 video.addEventListener('ended', () => {
-    if (videoIndex == videos.length - 1) {
+    if (videoIndex == videos.length - 1)
         loadVideo(0);
-    } else {
+    else 
         nextVideo();
-    }
 });
 
 
-// Handling drag-and-drop functionality
+
 dragDropArea.addEventListener('dragover', (event) => {
     event.preventDefault();
     dragDropArea.classList.add('drag-over');
 });
 
 
-// Removing the drag-over class
+
 dragDropArea.addEventListener('dragleave', () => {
     dragDropArea.classList.remove('drag-over');
 });
 
 
-// Handling the drop event
+
 dragDropArea.addEventListener('drop', (event) => {
     event.preventDefault();
     dragDropArea.classList.remove('drag-over');
@@ -171,54 +167,51 @@ dragDropArea.addEventListener('drop', (event) => {
 
         reader.onload = () => {
             videos.push(reader.result); 
-            loadVideo(videos.length - 1); 
+            loadVideo(videos.length-1); 
             createList(); 
         };
-    } else {
+    } else 
         alert('Please upload a valid MP4 video file.');
-    }
 });
 
 
-// Handling file input button
+
 dragDropArea.addEventListener('click', () => {
     fileInput.click();
 });
 
 
-// Handling file input change
+
 fileInput.addEventListener('change', () => {
     const file = fileInput.files[0];
     if (file && file.type === 'video/mp4') {
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
-        reader.onload = () => {
+        reader.onload=()=> {
             videos.push(reader.result); 
             loadVideo(videos.length - 1);
             createList();
         };
     } else {
-        alert('Please upload a valid MP4 video file.');
+        alert('Upload a valid MP4 video file.');
     }
 });
 
 
-// Deleting the current video
+
 deleteBttn.addEventListener('click', () => {
     videos.splice(videoIndex, 1);
-    if (videoIndex >= videos.length) {
+    if (videoIndex >= videos.length)
         videoIndex = 0;
-    }
     loadVideo(videoIndex);
     createList();
 });
 
 
-// Sorting videos by duration
+
 sortBttn.addEventListener('click', () => {
     const videoDurations = [];
-    const cnt = 0;
 
     const processVideo = (index) => {
         if (index >= videos.length) {
@@ -254,7 +247,7 @@ next.addEventListener('click', nextVideo);
 previous.addEventListener('click', previousVideo);
 
 
-// Choosing the filters
+
 let animationId;
 videoEffects.drawFrame = function () {
     cancelAnimationFrame(animationId); 
@@ -288,7 +281,7 @@ videoEffects.drawFrame = function () {
 };
 
 
-// Applying video effects
+
 effectButtons.forEach(button => {
     button.addEventListener('click', () => {
         const effect = button.getAttribute('data-effect');
@@ -298,20 +291,20 @@ effectButtons.forEach(button => {
 });
 
 
-// Syncing the progress bar with the video
+
 video.addEventListener('timeupdate', () => {
     progressBar.value = (video.currentTime / video.duration) * 100;
 });
 
 
-// User modifying the progress bar
+
 progressBar.addEventListener('input', () => {
     const targetTime = (progressBar.value / 100) * video.duration;
     video.currentTime = targetTime;
 });
 
 
-// Preview canvas
+
 progressBar.addEventListener('mousemove', (e) => {
     const rect = progressBar.getBoundingClientRect();
     const progress = (e.clientX - rect.left) / rect.width;
@@ -325,13 +318,13 @@ progressBar.addEventListener('mousemove', (e) => {
 });
 
 
-// Hide preview
+
 progressBar.addEventListener('mouseout', () => {
     previewCanvas.style.display = 'none';
 });
 
 
-// Extract a frame from the video
+
 function extractFrame(time) {
     video.pause();
     const tempCurrentTime = video.currentTime;

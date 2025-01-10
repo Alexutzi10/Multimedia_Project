@@ -8,14 +8,14 @@ export class VideoEffects {
     }
 
 
-    //Applying the effect
+
     applyEffect(effect) {
         this.currentEffect = effect;
         this.drawFrame();
     }
 
 
-    //Green tint effect
+
     green_tint(data) {
         for (let i = 0; i < data.length; i = i+4) {
             data[i] = data[i] * 0.8;
@@ -26,7 +26,7 @@ export class VideoEffects {
     }
 
 
-    //Magenta tint effect
+
     magenta_tint(data) {
         for (let i = 0; i < data.length; i = i+4) {
             data[i] = data[i] * 1.2;   
@@ -38,7 +38,7 @@ export class VideoEffects {
     }
 
 
-    //Old paper effect
+
     old_paper(data) {
         for (let i = 0; i < data.length; i = i+4) {
             const avg = (data[i] + data[i+1] + data[i+2]) / 3;
@@ -54,7 +54,7 @@ export class VideoEffects {
     }
 
 
-    //Colder tint effect
+
     cold_tint(data) {
         for (let i = 0; i < data.length; i = i+4) {
             data[i] = data[i] * 0.8;    
@@ -65,7 +65,7 @@ export class VideoEffects {
     }
 
 
-    //Setting the effect for the video
+
     drawFrame() {
         this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
 
