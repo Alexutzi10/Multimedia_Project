@@ -291,7 +291,7 @@ h3 + ul {
     border: 2px solid #e0e0e0;
 }
 
-/* Add hover effect */
+
 #volumeControl:hover {
     background: rgba(255, 255, 255, 0.3);
 }
