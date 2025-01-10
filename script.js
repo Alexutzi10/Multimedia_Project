@@ -66,7 +66,7 @@ play.addEventListener('click', () => {
 });
 
 volumeControl.addEventListener('input', (e) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     video.volume = volumeControl.value;
     saveSettings();
 });
@@ -254,10 +254,10 @@ next.addEventListener('click', nextVideo);
 previous.addEventListener('click', previousVideo);
 
 
-// Desenarea cadrelor video și aplicarea efectelor
+// Choosing the filters
 let animationId;
 videoEffects.drawFrame = function () {
-    cancelAnimationFrame(animationId); // Oprește orice ciclu anterior
+    cancelAnimationFrame(animationId); 
     animationId = requestAnimationFrame(() => {
         this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
 
