@@ -147,7 +147,7 @@ function saveSettings() {
 }
 
 
-//
+//Aproximates the video time to the progress bar
 video.addEventListener('timeupdate', () => {
     const progress = (video.currentTime / video.duration) * 100;
     progressBar.value = progress;
