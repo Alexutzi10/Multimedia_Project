@@ -108,6 +108,8 @@ let videoIndex = 0;
 
 const videoEffects = new VideoEffects(video, canvas);
 
+
+// Loading settings from local storage
 function loadSettings() {
     const settings = JSON.parse(localStorage.getItem('videoSettings'));
     if (settings) {
@@ -118,6 +120,8 @@ function loadSettings() {
     }
 }
 
+
+// Saving settings to local storage
 function saveSettings() {
     const settings = {
         volume: video.volume,
@@ -128,12 +132,15 @@ function saveSettings() {
     localStorage.setItem('videoSettings', JSON.stringify(settings));
 }
 
+
+//
 video.addEventListener('timeupdate', () => {
     const progress = (video.currentTime / video.duration) * 100;
     progressBar.value = progress;
 });
 
 
+//Displaying the correct icon for the play/pause button
 play.addEventListener('click', () => {
     if (video.paused) {
         video.play();
@@ -144,33 +151,22 @@ play.addEventListener('click', () => {
     }
 });
 
+
+//Volume control - setting the value and saving the volume to local storage
 volumeControl.addEventListener('input', (e) => {
     e.stopPropagation();
     video.volume = volumeControl.value;
     saveSettings();
 });
 
+
+//Volume control - loading the volume from local storage
 video.addEventListener('loadedmetadata', () => {
     volumeControl.value = video.volume;
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    video.volume = 0.5;
-    volumeControl.value = video.volume;
-    
-    volumeControl.addEventListener('input', (e) => {
-        e.stopPropagation();
-        video.volume = volumeControl.value;
-        saveSettings();
-    });
-    
-    volumeControl.addEventListener('change', (e) => {
-        e.stopPropagation();
-        video.volume = volumeControl.value;
-        saveSettings();
-    });
-});
 
+//Creating a list with the names of the videos from the playlist
 function createList() {
     ulVideos.replaceChildren();
     for (let i = 0; i < videos.length; i++) {
@@ -180,6 +176,8 @@ function createList() {
     }
 }
 
+
+//Loads the video with the corresponding index from the playlist
 function loadVideo(i) {
     if (i >= 0 && i < videos.length) {
         video.src = videos[i];
@@ -189,6 +187,8 @@ function loadVideo(i) {
     }
 }
 
+
+//Plays the next video in the queue
 function nextVideo() {
     if (videoIndex < videos.length - 1) 
         loadVideo(videoIndex + 1);
@@ -196,6 +196,8 @@ function nextVideo() {
         loadVideo(0);
 }
 
+
+//PLays the previous video in the queue
 function previousVideo() {
     if (videoIndex > 0) 
         loadVideo(videoIndex - 1);
@@ -203,6 +205,10 @@ function previousVideo() {
         loadVideo(videos.length - 1);
 }
 
+
+//Checks if the playlist has ended
+//If yes, it loads the first video in the playlist
+//If not, it loads the next video in the playlist
 video.addEventListener('ended', () => {
     if (videoIndex == videos.length - 1)
         loadVideo(0);
@@ -210,20 +216,26 @@ video.addEventListener('ended', () => {
         nextVideo();
 });
 
-dragDropArea.addEventListener('dragover', (event) => {
-    event.preventDefault();
+
+//Implements the drag feature for the drag and drop area
+dragDropArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
     dragDropArea.classList.add('drag-over');
 });
 
+
+//Creating a special zone for the drag&drop area that will be used in the css
 dragDropArea.addEventListener('dragleave', () => {
     dragDropArea.classList.remove('drag-over');
 });
 
-dragDropArea.addEventListener('drop', (event) => {
-    event.preventDefault();
+
+//Implements the drop feature for the drag and drop area
+dragDropArea.addEventListener('drop', (e) => {
+    e.preventDefault();
     dragDropArea.classList.remove('drag-over');
 
-    const file = event.dataTransfer.files[0];
+    const file = e.dataTransfer.files[0];
     if (file && file.type === 'video/mp4') {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -237,10 +249,14 @@ dragDropArea.addEventListener('drop', (event) => {
         alert('Please upload a valid MP4 video file.');
 });
 
+
+//Lets the user click ond the drag&drop area to upload a video
 dragDropArea.addEventListener('click', () => {
     fileInput.click();
 });
 
+
+//Implements the file input feature and checks if the file has requested type; if not throws a message
 fileInput.addEventListener('change', () => {
     const file = fileInput.files[0];
     if (file && file.type === 'video/mp4') {
@@ -257,6 +273,8 @@ fileInput.addEventListener('change', () => {
     }
 });
 
+
+//Lets the user delete a specific video and then loads the next video in the playlist
 deleteBttn.addEventListener('click', () => {
     videos.splice(videoIndex, 1);
     if (videoIndex >= videos.length)
@@ -265,6 +283,8 @@ deleteBttn.addEventListener('click', () => {
     createList();
 });
 
+
+//Sorts the videos from the playlist based on their duration in seconds
 sortBttn.addEventListener('click', () => {
     const videoDurations = [];
 
@@ -290,13 +310,24 @@ sortBttn.addEventListener('click', () => {
     processVideo(0);
 });
 
+//Saves the video playing settings when the paused button is pressed
 video.addEventListener('pause', saveSettings);
+
+
+//Saves the video playing settings before closing the tab
 window.addEventListener('beforeunload', saveSettings);
 
+
+//Loads the video playing settings when the page is loaded
 window.addEventListener('load', loadSettings);
+
+
+//When the next and previous buttons are pressed, the corresponding video is loaded
 next.addEventListener('click', nextVideo);
 previous.addEventListener('click', previousVideo);
 
+
+//Applies the chosen effect to the video
 let animationId;
 videoEffects.drawFrame = function () {
     cancelAnimationFrame(animationId); 
@@ -329,6 +360,8 @@ videoEffects.drawFrame = function () {
     });
 };
 
+
+//Recognises the selected effect passing it to the function that draws the frame and saves the chosen effect to be saved in the local storage
 effectButtons.forEach(button => {
     button.addEventListener('click', () => {
         const effect = button.getAttribute('data-effect');
@@ -337,15 +370,21 @@ effectButtons.forEach(button => {
     });
 });
 
+
+//When the progress bar is clicked, the video is set to the corresponding time
 video.addEventListener('timeupdate', () => {
     progressBar.value = (video.currentTime / video.duration) * 100;
 });
 
+
+//Updates the video playback position when the user interacts with the progress bar
 progressBar.addEventListener('input', () => {
     const targetTime = (progressBar.value / 100) * video.duration;
     video.currentTime = targetTime;
 });
 
+
+//When the user hovers over the progress bar, it creates a small preview with that frame
 progressBar.addEventListener('mousemove', (e) => {
     const rect = progressBar.getBoundingClientRect();
     const progress = (e.clientX - rect.left) / rect.width;
@@ -358,10 +397,14 @@ progressBar.addEventListener('mousemove', (e) => {
     extractFrame(previewTime);
 });
 
+
+//When the user moves the mouse out of the progress bar, the preview is hidden
 progressBar.addEventListener('mouseout', () => {
     previewCanvas.style.display = 'none';
 });
 
+
+//Extracts the frame at the given time and displays it in the preview frame
 function extractFrame(time) {
     video.pause();
     const tempCurrentTime = video.currentTime;
@@ -377,6 +420,8 @@ function extractFrame(time) {
     );
 }
 
+
+//Initializes the video player with the first video in the playlist
 loadVideo(videoIndex);
 createList();
 videoEffects.drawFrame();
