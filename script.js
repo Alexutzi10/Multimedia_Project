@@ -4,6 +4,8 @@ const videos = ['media/Carina-nebula-3-dimensions-hd.mp4',
     'media/Sketches-space-planetary-nebul.mp4'
 ];
 
+
+//Crating a class that will be used to apply effects to the video
 class VideoEffects {
     constructor(videoElement, canvasElement) {
         this.video = videoElement;
@@ -12,11 +14,15 @@ class VideoEffects {
         this.currentEffect = 'normal';
     }
 
+
+    //Applying the chosen effect to the video
     applyEffect(effect) {
         this.currentEffect = effect;
         this.drawFrame();
     }
 
+
+    //Modifying the video frame manipulating the RGB values in order to obtain a green tint
     green_tint(data) {
         for (let i = 0; i < data.length; i = i+4) {
             data[i] = data[i] * 0.8;
@@ -26,6 +32,8 @@ class VideoEffects {
         }
     }
 
+
+    //Modifying the video frame manipulating the RGB values in order to obtain a magenta tint
     magenta_tint(data) {
         for (let i = 0; i < data.length; i = i+4) {
             data[i] = data[i] * 1.2;   
@@ -36,6 +44,8 @@ class VideoEffects {
         }
     }
 
+
+    //Modifying the video frame manipulating the RGB values in order to obtain a yellowish tint
     old_paper(data) {
         for (let i = 0; i < data.length; i = i+4) {
             const avg = (data[i] + data[i+1] + data[i+2]) / 3;
@@ -50,6 +60,8 @@ class VideoEffects {
         }
     }
 
+
+    //Modifying the video frame manipulating the RGB values in order to obtain a colder tint
     cold_tint(data) {
         for (let i = 0; i < data.length; i = i+4) {
             data[i] = data[i] * 0.8;    
@@ -59,6 +71,8 @@ class VideoEffects {
         }
     }
 
+
+    //Drawing the frame on the canvas
     drawFrame() {
         this.context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
 
